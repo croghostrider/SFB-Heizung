@@ -1,0 +1,78 @@
+---
+repos:
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.2
+    hooks:
+      - id: codespell
+        additional_dependencies:
+          - tomli
+        exclude_types: [csv, json]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.3.1
+    hooks:
+      - id: pyupgrade
+        args: [--py39-plus]
+  - repo: https://github.com/psf/black
+    rev: 23.1.0
+    hooks:
+      - id: black
+        args:
+          - --safe
+          - --quiet
+        files: ^((src|test|examples|docs)/.+)?[^/]+\.py$
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-docstrings==1.6.0
+          - flake8-print==5.0.0
+          - pydocstyle==6.3.0
+        files: ^(src|examples|docs)/.+\.py$
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args:
+          - --resolve-all-configs
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-executables-have-shebangs
+        stages: [manual]
+      - id: check-json
+      - id: trailing-whitespace
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.991
+    hooks:
+      - id: mypy
+        files: ^src/.+\.py$
+        additional_dependencies: [typer==0.7.0]
+  - repo: https://github.com/sourcery-ai/sourcery
+    rev: v1.0.3
+    hooks:
+      - id: sourcery
+        stages: [manual]
+        # Run `pre-commit run --hook-stage manual sourcery --all-files` manually
+        # The best way to use Sourcery in a pre-commit hook:
+        # * review only changed lines:
+        # * omit the summary
+        # args: [--diff=git diff HEAD, --no-summary]
+        args: [--no-summary]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+  - repo: https://github.com/cdce8p/python-typing-update
+    rev: v0.5.1
+    hooks:
+      # Run `pre-commit run --hook-stage manual python-typing-update --all-files` manually
+      # from time to time to update python typing syntax.
+      # Will require manual work, before submitting changes!
+      - id: python-typing-update
+        stages: [manual]
+        args:
+          - --py39-plus
+          - --force
+          - --keep-updates
+        files: ^(src)/.+\.py$

@@ -1,2 +1,4 @@
 pyModbusTCP==0.2.0
 simple-pid==1.0.1
+streamlit==1.20.0
+plotly==5.13.1

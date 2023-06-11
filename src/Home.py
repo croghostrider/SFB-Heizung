@@ -70,6 +70,18 @@ def display_chart(temperature_chart):
     temperature_chart.plotly_chart(fig)
 
 
+def write_db(temperature):
+    # Get the current timestamp
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Insert the temperature and timestamp into the database
+    cursor.execute(
+        "INSERT INTO temperature (temperature, timestamp) VALUES (?, ?)",
+        (temperature, timestamp),
+    )
+    # Commit the changes and close the connection
+    conn.commit()
+
+
 def start_control(setpoint, kp, ki, kd, read_interval):
     pid = PID(kp, ki, kd, setpoint=setpoint, output_limits=(0, 100))
     previous_temp = 0
@@ -79,15 +91,7 @@ def start_control(setpoint, kp, ki, kd, read_interval):
     temperature_chart = st.empty()
     while True:
         current_temp = read_temperature()
-        # Get the current timestamp
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # Insert the temperature and timestamp into the database
-        cursor.execute(
-            "INSERT INTO temperature (temperature, timestamp) VALUES (?, ?)",
-            (current_temp, timestamp),
-        )
-        # Commit the changes and close the connection
-        conn.commit()
+        write_db(current_temp)
         display_chart(temperature_chart)
         if current_temp is not None:
             controlValue = int(pid(current_temp))

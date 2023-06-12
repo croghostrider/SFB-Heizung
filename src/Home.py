@@ -127,6 +127,8 @@ def main():
         step=1,
     )
 
+    client.write_single_register(regHeating, 0)
+
     col1, col2 = st.columns(2)
     if start_button := col1.button("On / Set Settings"):
         start_control(setpoint, kp, ki, kd, read_interval)

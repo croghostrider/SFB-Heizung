@@ -1,3 +1,4 @@
+#verwendete Imports
 import datetime
 import sqlite3
 import time
@@ -63,7 +64,7 @@ def power_gauge(power, previous_power, gauge_placeholder):
     )
     gauge_placeholder.write(fig)
 
-
+#History
 def display_chart(temperature_chart):
     df = pd.read_sql_query("SELECT * FROM temperature", conn)
     fig = px.line(df, x="timestamp", y="temperature", title="Temperature History")
@@ -81,7 +82,7 @@ def write_db(temperature):
     # Commit the changes and close the connection
     conn.commit()
 
-
+#Logik PID-Regler
 def start_control(setpoint, kp, ki, kd, read_interval):
     pid = PID(kp, ki, kd, setpoint=setpoint, output_limits=(0, 100))
     previous_temp = 0
@@ -107,7 +108,7 @@ def start_control(setpoint, kp, ki, kd, read_interval):
 
 def main():
     st.title("Heating Control App")
-
+#PID-Regler
     setpoint = st.number_input(
         "Setpoint", min_value=0.0, max_value=40.0, value=24.0, step=0.5
     )
@@ -129,7 +130,7 @@ def main():
     )
 
     client.write_single_register(regHeating, 0)
-
+#ON/OFF Schalter
     col1, col2 = st.columns(2)
     if start_button := col1.button("On / Set Settings"):
         start_control(setpoint, kp, ki, kd, read_interval)

@@ -97,6 +97,7 @@ def start_control(setpoint, kp, ki, kd, read_interval):
             controlValue = int(pid(current_temp))
             temp_gauge(current_temp, previous_temp, gauge_placeholder_temp)
             power_gauge(controlValue, previous_power, gauge_placeholder_power)
+            previous_power = controlValue
             previous_temp = current_temp
             controlValue = int(float(controlValue) * 327.67)
             client.write_single_register(regHeating, controlValue)
